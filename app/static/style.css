@@ -1,0 +1,141 @@
+body{
+
+    margin:0;
+
+    font-family:'Segoe UI',sans-serif;
+
+    background:linear-gradient(135deg,#1f4e79,#4facfe);
+
+    min-height:100vh;
+
+}
+
+.overlay{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+.weather-card{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:40px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.2);
+
+}
+
+.weather-card h1{
+
+    font-weight:700;
+
+    color:#1f4e79;
+
+}
+
+.result-card{
+
+    margin-top:25px;
+
+    text-align:center;
+
+}
+
+.city-name{
+
+    font-weight:700;
+
+}
+
+.temperature{
+
+    font-size:70px;
+
+    font-weight:bold;
+
+    color:#007bff;
+
+}
+
+.condition{
+
+    font-size:22px;
+
+    color:#666;
+
+}
+
+.info-box{
+
+    margin-top:20px;
+
+    background:#f8f9fa;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    transition:.3s;
+
+}
+
+.info-box:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+}
+
+.info-box h5{
+
+    margin-top:10px;
+
+    font-size:18px;
+
+}
+
+.info-box p{
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    color:#0d6efd;
+
+}
+
+.btn-primary{
+
+    border-radius:10px;
+
+}
+
+.form-control{
+
+    border-radius:10px;
+
+}
+
+@media(max-width:768px){
+
+.temperature{
+
+    font-size:55px;
+
+}
+
+.weather-card{
+
+    padding:25px;
+
+}
+
+}
