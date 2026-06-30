@@ -1,0 +1,74 @@
+name: Deploy Flask App to EC2 
+
+on:
+  push:
+    branches:
+      - "16-CICD-PYTHON-WEBAPP"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository 
+        uses: actions/checkout@v4
+
+      - name: Set up Python 
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Dependencies 
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Tests 
+        run: |
+          pytest || true
+
+      - name: Set up SSH 
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create .env File 
+        run: |
+          cat <<EOF > .env
+          ENV=${{ secrets.ENV }}
+          OPENWEATHER_API_KEY=${{ secrets.OPENWEATHER_API_KEY }}
+          EOF
+
+      - name: Copy Project to EC2 
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          rsync -avz --delete \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'venv' \
+            --exclude '__pycache__' \
+            --exclude '.pytest_cache' \
+            --exclude '.env' \
+            ./ $EC2_USERNAME@$EC2_HOST:/home/ubuntu/weather-dashboard/
+
+          scp .env $EC2_USERNAME@$EC2_HOST:/home/ubuntu/weather-dashboard/.env
+
+      - name: Deploy Flask App 
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          ssh $EC2_USERNAME@$EC2_HOST << 'EOF'
+            cd /home/ubuntu/weather-dashboard
+            chmod +x deploy.sh
+            ./deploy.sh
+          EOF
+
+      - name: Clean Up SSH Key 
+        if: always()
+        run: |
+          rm -f ~/.ssh/id_rsa

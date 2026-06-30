@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Weather Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="overlay">
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="weather-card">
+
+                <h1 class="text-center mb-2">
+                    🌤 Weather Dashboard
+                </h1>
+
+                <p class="text-center text-muted mb-4">
+                    Search real-time weather for any city
+                </p>
+
+                <form method="POST">
+
+                    <div class="input-group mb-4">
+
+                        <input
+                            type="text"
+                            class="form-control form-control-lg"
+                            name="city"
+                            placeholder="Enter city name..."
+                            required>
+
+                        <button class="btn btn-primary btn-lg">
+                            Search
+                        </button>
+
+                    </div>
+
+                </form>
+
+                {% if error %}
+
+                <div class="alert alert-danger">
+
+                    {{ error }}
+
+                </div>
+
+                {% endif %}
+
+                {% if weather %}
+
+                <div class="result-card">
+
+                    <h2 class="city-name">
+
+                        📍 {{ weather.city }}
+
+                    </h2>
+
+                    <div class="temperature">
+
+                        {{ weather.temperature }}°C
+
+                    </div>
+
+                    <p class="condition">
+
+                        ☁ {{ weather.condition }}
+
+                    </p>
+
+                    <div class="row mt-4">
+
+                        <div class="col-md-4">
+
+                            <div class="info-box">
+
+                                💧
+
+                                <h5>Humidity</h5>
+
+                                <p>{{ weather.humidity }}%</p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="info-box">
+
+                                💨
+
+                                <h5>Wind</h5>
+
+                                <p>{{ weather.wind_speed }} m/s</p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="info-box">
+
+                                🕒
+
+                                <h5>Updated</h5>
+
+                                <p>Now</p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
