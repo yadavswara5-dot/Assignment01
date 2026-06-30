@@ -4,36 +4,45 @@ set -e
 
 APP_DIR="/home/ubuntu/weather-dashboard"
 
-echo "Moving to project directory..."
+echo "========================================"
+echo "Starting Flask deployment..."
+echo "========================================"
+
 cd "$APP_DIR"
 
 echo "Updating package list..."
 sudo apt-get update
 
-echo "Installing Python and venv..."
-sudo apt-get install -y python3 python3-pip python3-venv
+echo "Installing required system packages..."
+sudo apt-get install -y \
+    python3 \
+    python3-pip \
+    python3.14-venv
 
-echo "Removing old virtual environment (if broken)..."
+echo "Removing old virtual environment..."
 rm -rf venv
 
-echo "Creating virtual environment..."
+echo "Creating new virtual environment..."
 python3 -m venv venv
-
-if [ ! -d "venv" ]; then
-    echo "Virtual environment creation failed!"
-    exit 1
-fi
 
 echo "Activating virtual environment..."
 source venv/bin/activate
 
 echo "Upgrading pip..."
-pip install --upgrade pip
+python -m pip install --upgrade pip
 
-echo "Installing dependencies..."
+echo "Installing Python dependencies..."
 pip install -r requirements.txt
 
-echo "Restarting application..."
+echo "Checking Gunicorn installation..."
+gunicorn --version
+
+echo "Restarting Flask service..."
 sudo systemctl restart weather
 
+echo "Checking service status..."
+sudo systemctl --no-pager --full status weather
+
+echo "========================================"
 echo "Deployment completed successfully!"
+echo "========================================"
