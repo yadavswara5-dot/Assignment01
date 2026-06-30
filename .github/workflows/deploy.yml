@@ -3,7 +3,7 @@ name: Deploy Flask App to EC2
 on:
   push:
     branches:
-      - "16-CICD-PYTHON-WEBAPP"
+      - "main"
 
 jobs:
   deploy:
